@@ -1,0 +1,57 @@
+﻿@model IEnumerable<AplicacaoComCodeFirst.Controllers.Posts>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Categorias.Categoria)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TituloPost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResumoPost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ConteudoPost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataPostagem)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Categorias.Categoria)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TituloPost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ResumoPost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ConteudoPost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DataPostagem)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PostID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PostID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PostID })
+        </td>
+    </tr>
+}
+
+</table>

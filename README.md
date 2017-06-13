@@ -287,6 +287,167 @@ Adicionar ao final -> "/testelayout"
 
 ## <a name="parte4">Models: Desenhando os modelos da nossa aplicação</a>
 
+“conexão combancos de dados” (que é o que faremos de fato em nossa aplicação exemplo) em uma aplicação ASP.NET MVC, ainda assim, estaremos falando de conexão através de models, entretanto, é de fundamental importância entender que para esta abordagem, existem diferentes formatos para se realizar tal procedimento. Os três mais difundidos no mercado são:  
+
+- Através da utilização direta das classes ADO.NET;
+ADOé o acrônimo para ActiveX Data Object. Trata-se de um conjunto de classes e recursos pertencentes ao conjunto de namespaces da plataforma .NET (daí o nome ADO.NET), disponibilizado para possibilitar o acesso às estruturas de bancos de
+dados por parte das aplicações. Através dela, é possível realizar diferentes tipos de acessos.
+
+![ADO.NET](https://github.com/josemalcher/Livro_ASP-NET_MVC/blob/master/img/ADO.PNG?raw=true)
+
+- Através de ORM’s (no modelo database first);
+- Através de ORM’s (no modelo code-first);
+- Através de ORM’s (no modelo model-first).
+
+ORM’s são recursos (ferramentas) criados para facilitar aos desenvolvedores o processo de conexão por parte de suas aplicações, às fontes de dados. Em linhas gerais, o que estas ferramentas fazem é criar uma camada de abstração em relação ao banco de dados, disponibilizando portanto um modelo em nível mais alto (programático) para acessar e manipular os dados.
+
+- Simplicidade: talvez a principal característica proporcionada pelos ORM’s é a simplificação do modelo de acesso aos dados. Graças a esta simplificação, desenvolvedores podem trabalhar com as aplicações sem necessariamente possuírem
+conhecimentos avançados de SQL e bancos de dados;
+- Produtividade: como o desenvolvedor acessa e manipula os dados através de um modelo programático simplificado, desenvolvedores tendem a ser mais produtivos, uma vez que o modelo de desenvolvimento lhe é familiar;
+- Redução de código: como o acesso aos dados é feito em um nível mais alto, automaticamente o número de linhas de código escritas para acessar os dados reduz drasticamente. Você poderá constatar este fato na medida em que avançamos com a criação da aplicação Cadê meu médico;
+- Facilita amanutenção: omodelo disponibilizado pelosORM’s facilita emuito amanutenção da aplicação, pois amanipulação das operações se dá através de código já conhecido (objetos e seus respectivos métodos);
+- Código elegante: o fato de o modelo mesclado de sentenças SQL e chamadas de métodos de objetos dar lugar a um código mais legível e semântico torna o código fonte da aplicação mais elegante.
+
+Exemplo ADO:
+```csharp
+string stringDeConexao = "string para conexão com o banco de dados aqui";
+SqlConnection objetoDeConexao = new SqlConnection(stringDeConexao);
+SqlCommand objetoDeComando = objetoDeConexao.CreateCommand();
+string sql = "INSERT INTO Clientes (NomeCompleto, Email)
+values (@NomeCompleto, @Email)";
+objetoDeComando.CommandText = sql;
+objetoDeComando.CommandType = CommandType.Text;
+objetoDeComando.Parameters.Add("@NomeCompleto", NomeCompleto.Text);
+objetoDeComando.Parameters.Add("@Email", Email.Text);
+objetoDeComando.ExecuteNonQuery();
+```
+
+Exemplo ORM:
+```scharp
+Clientes.Add();
+Clientes.NomeCompleto = NomeCompleto.Text;
+Clientes.Email = Email.Text;
+Clientes.Save();
+```
+
+Entity Framework é um framework do tipo ORM que permite tratar e manipular dados como classes e objetos de domínio. Por ser desenvolvido, mantido e disponibilizado pela Microsoft, ele se integra de forma otimizada às tecnologias disponíveis na plataforma .NET comperformance, segurança e robustez. Por ser esta integração nativa, desenvolvedores podem utilizar também de forma natural dois grandes recursos da .NET framework: LINQ e expressões Lambda para recuperar e manipular os dados necessários à aplicação.
+
+uma das características funcionais do Entity Framework e é conhecido como code first (código primeiro, em português). Para que esta ideia torne-se mais clara, vamos à prática. Criaremos um projeto paralelo, em nada relacionado ao Cadê
+meu médico. Faremos desta forma porque para Cadê meu médico utilizaremos outra estratégia.
+
+Quando falamos em code first, automaticamente falamos em classes POCO. Isso porque não é possível dissociar uma coisa da outra.
+
+POCO é o acrônimo para Plain Old CLR Object. O termo é uma derivação do termo POJO (Plain Old Java Object), originalmente utilizado pela comunidade Java, como você pode imaginar. A ideia deste tipo especial de classe é ser um agente independente de frameworks e/ou componentes dentro da plataforma .NET. Assim, classes podem herdar seus comportamentos, interfaces podem ser implementadas e ainda, atributos podem ser persistidos.
+
+Classe POCO para ’Categorias’:
+```csharp
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+
+namespace AplicacaoComCodeFirst.Controllers
+{
+    public class Categorias
+    {
+        [Key]
+        public int CategoriaID { get; set; }
+        public string Categoria { get; set; }
+        public string Descricao { get; set; }
+        public virtual ICollection<Posts> Posts { get; set; }
+    }
+
+    
+}
+```
+- Atributo [Key]: indica ao Entity Framework que a propriedade imediatamente na sequência (no caso, CategoriaID) deverá ser considerada chave primária no momento da geração do banco de dados no servidor de destino. É possível parametrizar este atributo conforme a necessidade para emplacar comportamentos específicos (como a adição ou não da cláusula identity). Para a criação do nosso exemplo,manteremos o padrão utilizado pelo EF para esta geração;
+
+- public virtual ICollection<Posts> Posts { get; set; }: em uma ferramenta tradicional para composição de banco de dados relacionais, conseguimos explicitar os relacionamentos de 1 para muitos ou muitos para muitos de forma bem simples. Para expressar esse tipo de relacionamento através de code first, utilizamos uma coleção de objetos tipada; justamente o que estamos fazendo com a linha em destaque neste tópico. Estamos dizendo ao EF que uma Categoria deverá suportar múltiplos
+Posts.
+
+Classe POCO que representa ’Posts’:
+
+```csharp
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AplicacaoComCodeFirst.Controllers
+{
+    public class Posts
+    {
+        [Key]
+        public long PostID { get; set; }
+        public string TituloPost { get; set; }
+        public string ResumoPost { get; set; }
+        public string ConteudoPost { get; set; }
+        public DateTime DataPostagem { get; set; }
+        public int CategoriaID { get; set; }
+        [ForeignKey()("CategoriaID")]
+        public virtual Categorias Categorias
+        {
+            get; set;
+        }
+}
+
+```
+A observação válida em relação à listagem 5 fica por conta da última propriedade. Diferentemente da classe Categorias onde possuímos uma coleção de objetos (sim, uma Categoria pode possuir vários Posts), aqui, possuímos uma instância de Categoria, já que, pela definição da regra de negócio, um Post pode pertencer a apenas uma Categoria. O atributo [ForeignKey("CategoriaID")], como você já deve estar imaginando, informa ao EF que a propriedade imediatamente a
+seguir assumirá o comportamento de chave estrangeira e que, portanto, será o elo com outra tabela—em nosso caso, a tabela Posts.
+
+Para que a engine do Entity Framework possa ser capaz de gerar a estrutura de banco de dados com base nas classes POCO, é preciso que exista uma classe de amarração, na qual são informados parâmetros cruciais no processo de geração da estrutura final. Esta classe foi convencionada pelo EF como classe de contexto. Nela, implementamos algumas ações que são fundamentais para que tudo funcione de forma adequada.
+
+Classe de contexto para o Entity Framework:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Web;
+using AplicacaoComCodeFirst.Controllers;
+
+namespace AplicacaoComCodeFirst.Models
+{
+    public class BlogContext : DbContext
+    {
+        public DbSet<Posts> Posts { get; set; }
+        public DbSet<Categorias> Categorias { get; set; }
+    }
+}
+
+```
+
+A classe de contexto a qual nos referimos foi criada nos mesmos moldes das demais apresentadas até aqui. Em se tratando de modelos de dados, evidentemente está dentro do diretório Models.
+
+Esta é a estrutura mais simplificada possível para a classe de contexto. Aqui estamos “dizendo” ao EF, através das diretivas DbSet, que as classes Posts e Categorias deverão ser criadas no banco de dados de destino.
+
+Classe de contexto adaptada para utilizar um servidor específico:
+
+```csharp
+public class BlogContext : DbContext
+{
+public BlogContext() : base("name=BlogContext")
+{
+Database.Connection.ConnectionString =
+@"data source=FABRCIOSANC36FC\SQLEXPRESS;
+initial catalog=BlogBDLivro; Integrated Security=SSPI";
+}
+public DbSet<Categorias> Categorias { get; set; }
+public DbSet<Posts> Posts { get; set; }
+}
+```
+
+Scaffold é o recurso do ASP.NET MVC que permite criar operações de criação, leitura, atualização e remoção de registros no banco de dados de forma automatizada, utilizando boas práticas de desenvolvimento e a view-engine padrão (a saber, Razor). Com base na estrutura de banco de dadosmapeada, oASP.NETMVCé capaz de gerar as actions e respectivas views para possibilitar a realização das operações de CRUD.
+
+- Model First with Entity Framework — MSDN: http://bit.ly/mvc-ef-modelfirst
+- Entity Framework Tutorial: http://bit.ly/mvc-ef-tutorial
+
+Scrypt do BD: https://gist.github.com/marcioalthmann/6276617
+
+
+
+
 [Voltar ao Índice](#indice)
 
 ---

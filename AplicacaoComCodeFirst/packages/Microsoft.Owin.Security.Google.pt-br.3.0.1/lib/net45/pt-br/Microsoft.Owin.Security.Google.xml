@@ -1,0 +1,344 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Owin.Security.Google</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleApplyRedirectContext">
+      <summary>Contexto passado quando um Challenge faz com que um redirecionamento autorize um ponto de extremidade no middleware do Google OpenID</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleApplyRedirectContext.#ctor(Microsoft.Owin.IOwinContext,Microsoft.Owin.Security.Google.GoogleAuthenticationOptions,Microsoft.Owin.Security.AuthenticationProperties,System.String)">
+      <summary>Cria um novo objeto de contexto.</summary>
+      <param name="context">O contexto de solicitação OWIN</param>
+      <param name="options">As opções de middleware do Google OpenID</param>
+      <param name="properties">As propriedades de autenticação do desafio</param>
+      <param name="redirectUri">O URI de redirecionamento inicial</param>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleApplyRedirectContext.Properties">
+      <summary>Obtém as propriedades de autenticação do desafio</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleApplyRedirectContext.RedirectUri">
+      <summary>Obtém o URI usado para a operação de redirecionamento.</summary>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleAuthenticatedContext">
+      <summary>Contém informações sobre a sessão de login, bem como do <see cref="T:System.Security.Claims.ClaimsIdentity" /> do usuário.</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleAuthenticatedContext.#ctor(Microsoft.Owin.IOwinContext,System.Security.Claims.ClaimsIdentity,Microsoft.Owin.Security.AuthenticationProperties,System.Xml.Linq.XElement,System.Collections.Generic.IDictionary{System.String,System.String})">
+      <summary>Inicializa um <see cref="T:Microsoft.Owin.Security.Google.GoogleAuthenticatedContext" /></summary>
+      <param name="context">O ambiente OWIN</param>
+      <param name="identity">O <see cref="T:System.Security.Claims.ClaimsIdentity" /> que representa o usuário</param>
+      <param name="properties">Um conjunto de propriedades para as propriedades de autenticação comuns</param>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticatedContext.AttributeExchangeProperties">
+      <summary>Obtém o dicionário de chave-valor de propriedades de mensagem</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticatedContext.Identity">
+      <summary>Obtém ou define a <see cref="T:System.Security.Claims.ClaimsIdentity" /> que representa o usuário</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticatedContext.Properties">
+      <summary>Obtém ou define um conjunto de propriedades para as propriedades de autenticação comuns</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticatedContext.ResponseMessage">
+      <summary>Obtém ou define a mensagem de resposta analisada de cadeia de consulta openid</summary>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleAuthenticationMiddleware">
+      <summary>Middleware OWIN para autenticar usuários usando o Google OpenID</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleAuthenticationMiddleware.#ctor(Microsoft.Owin.OwinMiddleware,Owin.IAppBuilder,Microsoft.Owin.Security.Google.GoogleAuthenticationOptions)">
+      <summary>Inicializa um <see cref="T:Microsoft.Owin.Security.Google.GoogleAuthenticationMiddleware" /></summary>
+      <param name="next">O próximo middleware no pipeline Owin a invocar</param>
+      <param name="app">O aplicativo OWIN</param>
+      <param name="options">Opções de configuração para o middleware</param>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleAuthenticationMiddleware.CreateHandler">
+      <summary>Fornece o objeto <see cref="T:Microsoft.Owin.Security.Infrastructure.AuthenticationHandler" /> para processar solicitações relacionadas à autenticação.</summary>
+      <returns>Um <see cref="T:Microsoft.Owin.Security.Infrastructure.AuthenticationHandler" /> configurado com o <see cref="T:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions" /> fornecido ao construtor.</returns>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions">
+      <summary>Opções de configuração para <see cref="T:Microsoft.Owin.Security.Google.GoogleAuthenticationMiddleware" /></summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions.#ctor">
+      <summary>Inicializa um novo <see cref="T:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions" />.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions.BackchannelCertificateValidator">
+      <summary>Obtém ou define o validador de certificado fixo a ser usado para validar os pontos de extremidade usados ​​nas comunicações de canal de retorno que pertencem ao Google.</summary>
+      <returns>O validador de certificado fixo.</returns>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions.BackchannelHttpHandler">
+      <summary>O HttpMessageHandler usado para comunicação com o Google.Ele não pode ser estabelecido ao mesmo tempo que BackchannelCertificateValidator, a menos que o valor possa ser reduzido para um WebRequestHandler.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions.BackchannelTimeout">
+      <summary>Obtém ou define o valor de tempo limite em milissegundos para comunicações de canal de retorno com o Google.</summary>
+      <returns>O tempo limite do canal de retorno.</returns>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions.CallbackPath">
+      <summary>O caminho da solicitação no caminho de base do aplicativo onde o usuário-agente será retornado.O middleware processará essa solicitação quando ela chegar.O valor padrão é "/signin-google".</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions.Caption">
+      <summary>Obtém ou define o texto que o usuário pode exibir na entrada da interface do usuário.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions.Provider">
+      <summary>Obtém ou define o <see cref="T:Microsoft.Owin.Security.Google.IGoogleAuthenticationProvider" /> usado para lidar com eventos de autenticação.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions.SignInAsAuthenticationType">
+      <summary>Obtém ou define o nome de outro middleware de autenticação que será responsável pela emissão real de um <see cref="T:System.Security.Claims.ClaimsIdentity" /> do usuário.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationOptions.StateDataFormat">
+      <summary>Obtém ou define o tipo usado para proteger os dados manipulados pelo middleware.</summary>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleAuthenticationProvider">
+      <summary>Implementação padrão de <see cref="T:Microsoft.Owin.Security.Google.IGoogleAuthenticationProvider" />.</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleAuthenticationProvider.#ctor">
+      <summary>Inicializa um <see cref="T:Microsoft.Owin.Security.Google.GoogleAuthenticationProvider" /></summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleAuthenticationProvider.ApplyRedirect(Microsoft.Owin.Security.Google.GoogleApplyRedirectContext)">
+      <summary>É chamado quando um Challenge faz com que um redirecionamento autorize um ponto de extremidade no middleware do Google OpenID</summary>
+      <param name="context">Contém URI de redirecionamento e <see cref="T:Microsoft.Owin.Security.AuthenticationProperties" /> do desafio</param>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleAuthenticationProvider.Authenticated(Microsoft.Owin.Security.Google.GoogleAuthenticatedContext)">
+      <summary>É invocado sempre que o Google autentica um usuário com êxito</summary>
+      <returns>Uma <see cref="T:System.Threading.Tasks.Task" /> que representa a operação concluída.</returns>
+      <param name="context">Contém informações sobre a sessão de login, bem como do <see cref="T:System.Security.Claims.ClaimsIdentity" /> do usuário.</param>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationProvider.OnApplyRedirect">
+      <summary>Obtém ou define o representante que é invocado quando o método ApplyRedirect é invocado.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationProvider.OnAuthenticated">
+      <summary>Obtém ou define a função que é invocada quando o método Authenticated é invocado.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleAuthenticationProvider.OnReturnEndpoint">
+      <summary>Obtém ou define a função que é invocada quando o método ReturnEndpoint é invocado.</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleAuthenticationProvider.ReturnEndpoint(Microsoft.Owin.Security.Google.GoogleReturnEndpointContext)">
+      <summary>Invocado antes de o <see cref="T:System.Security.Claims.ClaimsIdentity" /> ser salvo em um cookie local e o navegador ser redirecionado para a URL solicitada originalmente.</summary>
+      <returns>Uma <see cref="T:System.Threading.Tasks.Task" /> que representa a operação concluída.</returns>
+      <param name="context">Contém informações sobre a sessão de login, bem como do <see cref="T:System.Security.Claims.ClaimsIdentity" /> do usuário.</param>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleOAuth2ApplyRedirectContext">
+      <summary>Contexto passado quando um Challenge faz com que um redirecionamento autorize um ponto de extremidade no middleware do Google OAuth 2.0</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleOAuth2ApplyRedirectContext.#ctor(Microsoft.Owin.IOwinContext,Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions,Microsoft.Owin.Security.AuthenticationProperties,System.String)">
+      <summary>Cria um novo objeto de contexto.</summary>
+      <param name="context">O contexto de solicitação OWIN</param>
+      <param name="options">As opções do middleware do Google OAuth 2.0</param>
+      <param name="properties">As propriedades de autenticação do desafio</param>
+      <param name="redirectUri">O URI de redirecionamento inicial</param>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2ApplyRedirectContext.Properties">
+      <summary>Obtém as propriedades de autenticação do desafio</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2ApplyRedirectContext.RedirectUri">
+      <summary>Obtém o URI usado para a operação de redirecionamento.</summary>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext">
+      <summary>Contém informações sobre a sessão de login, bem como do <see cref="T:System.Security.Claims.ClaimsIdentity" /> do usuário.</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.#ctor(Microsoft.Owin.IOwinContext,Newtonsoft.Json.Linq.JObject,System.String,System.String,System.String)">
+      <summary>Inicializa um <see cref="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext" /></summary>
+      <param name="context">O ambiente OWIN</param>
+      <param name="user">As informações de usuário do Google serializadas com JSON</param>
+      <param name="accessToken">Token de acesso ao Google OAuth 2.0</param>
+      <param name="refreshToken">Token de atualização do Google OAuth 2.0</param>
+      <param name="expires">Segundos até expiração</param>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.AccessToken">
+      <summary>Obtém o token de acesso ao Google</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.Email">
+      <summary>Obtém o email do usuário</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.ExpiresIn">
+      <summary>Obtém a hora de expiração do token de acesso ao Google</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.FamilyName">
+      <summary>Obtém o sobrenome do usuário</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.GivenName">
+      <summary>Obtém o nome do usuário</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.Id">
+      <summary>Obtém a ID de usuário do Google</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.Identity">
+      <summary>Obtém a <see cref="T:System.Security.Claims.ClaimsIdentity" /> que representa o usuário</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.Name">
+      <summary>Obtém o nome do usuário</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.Profile">
+      <summary>Obtém o link de perfil do usuário</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.Properties">
+      <summary>Obtém ou define um conjunto de propriedades para as propriedades de autenticação comuns</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.RefreshToken">
+      <summary>Obtém o token de atualização do Google</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext.User">
+      <summary>Obtém o usuário serializado de JSON</summary>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationMiddleware">
+      <summary>Middleware OWIN para autenticar usuários usando o Google OAuth 2.0</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationMiddleware.#ctor(Microsoft.Owin.OwinMiddleware,Owin.IAppBuilder,Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions)">
+      <summary>Inicializa um <see cref="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationMiddleware" /></summary>
+      <param name="next">O próximo middleware no pipeline Owin a invocar</param>
+      <param name="app">O aplicativo OWIN</param>
+      <param name="options">Opções de configuração para o middleware</param>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationMiddleware.CreateHandler">
+      <summary>Fornece o objeto <see cref="T:Microsoft.Owin.Security.Infrastructure.AuthenticationHandler" /> para processar solicitações relacionadas à autenticação.</summary>
+      <returns>Um <see cref="T:Microsoft.Owin.Security.Infrastructure.AuthenticationHandler" /> configurado com o <see cref="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions" /> fornecido ao construtor.</returns>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions">
+      <summary>Opções de configuração para <see cref="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationMiddleware" /></summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.#ctor">
+      <summary>Inicializa um novo <see cref="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions" />.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.AccessType">
+      <summary>access_type.Definir como 'offline' para solicitar um token de atualização.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.BackchannelCertificateValidator">
+      <summary>Obtém ou define o validador de certificado fixo a ser usado para validar os pontos de extremidade usados ​​nas comunicações de canal de retorno que pertencem ao Google.</summary>
+      <returns>O validador de certificado fixo.</returns>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.BackchannelHttpHandler">
+      <summary>O HttpMessageHandler usado para comunicação com o Google.Ele não pode ser estabelecido ao mesmo tempo que BackchannelCertificateValidator, a menos que o valor possa ser reduzido para um WebRequestHandler.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.BackchannelTimeout">
+      <summary>Obtém ou define o valor de tempo limite em milissegundos para comunicações de canal de retorno com o Google.</summary>
+      <returns>O tempo limite do canal de retorno em milissegundos.</returns>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.CallbackPath">
+      <summary>O caminho da solicitação no caminho de base do aplicativo onde o usuário-agente será retornado.O middleware processará essa solicitação quando ela chegar.O valor padrão é "/signin-google".</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.Caption">
+      <summary>Obtém ou define o texto que o usuário pode exibir na entrada da interface do usuário.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.ClientId">
+      <summary>Obtém ou define a id do cliente atribuída pelo Google</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.ClientSecret">
+      <summary>Obtém ou define o segredo do cliente atribuído pelo Google</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.Provider">
+      <summary>Obtém ou define o <see cref="T:Microsoft.Owin.Security.Google.IGoogleOAuth2AuthenticationProvider" /> usado para lidar com eventos de autenticação.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.Scope">
+      <summary>Uma lista de permissões a solicitar.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.SignInAsAuthenticationType">
+      <summary>Obtém ou define o nome de outro middleware de autenticação que será responsável pela emissão real de um <see cref="T:System.Security.Claims.ClaimsIdentity" /> do usuário.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions.StateDataFormat">
+      <summary>Obtém ou define o tipo usado para proteger os dados manipulados pelo middleware.</summary>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationProvider">
+      <summary>Implementação padrão de <see cref="T:Microsoft.Owin.Security.Google.IGoogleOAuth2AuthenticationProvider" />.</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationProvider.#ctor">
+      <summary>Inicializa um <see cref="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationProvider" /></summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationProvider.ApplyRedirect(Microsoft.Owin.Security.Google.GoogleOAuth2ApplyRedirectContext)">
+      <summary>É chamado quando um Challenge faz com que um redirecionamento autorize um ponto de extremidade no middleware do Google OAuth 2.0</summary>
+      <param name="context">Contém URI de redirecionamento e <see cref="T:Microsoft.Owin.Security.AuthenticationProperties" /> do desafio</param>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationProvider.Authenticated(Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext)">
+      <summary>É invocado sempre que o Google autentica um usuário com êxito</summary>
+      <returns>Uma <see cref="T:System.Threading.Tasks.Task" /> que representa a operação concluída.</returns>
+      <param name="context">Contém informações sobre a sessão de login, bem como do <see cref="T:System.Security.Claims.ClaimsIdentity" /> do usuário.</param>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationProvider.OnApplyRedirect">
+      <summary>Obtém ou define o representante que é invocado quando o método ApplyRedirect é invocado.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationProvider.OnAuthenticated">
+      <summary>Obtém ou define a função que é invocada quando o método Authenticated é invocado.</summary>
+    </member>
+    <member name="P:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationProvider.OnReturnEndpoint">
+      <summary>Obtém ou define a função que é invocada quando o método ReturnEndpoint é invocado.</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationProvider.ReturnEndpoint(Microsoft.Owin.Security.Google.GoogleOAuth2ReturnEndpointContext)">
+      <summary>Invocado antes de o <see cref="T:System.Security.Claims.ClaimsIdentity" /> ser salvo em um cookie local e o navegador ser redirecionado para a URL solicitada originalmente.</summary>
+      <returns>Uma <see cref="T:System.Threading.Tasks.Task" /> que representa a operação concluída.</returns>
+      <param name="context">Contém informações de contexto e tíquete de autenticação do ponto de extremidade de retorno.</param>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleOAuth2ReturnEndpointContext">
+      <summary>Fornece informações de contexto para provedores de middleware.</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleOAuth2ReturnEndpointContext.#ctor(Microsoft.Owin.IOwinContext,Microsoft.Owin.Security.AuthenticationTicket)">
+      <summary>Inicializar um <see cref="T:Microsoft.Owin.Security.Google.GoogleOAuth2ReturnEndpointContext" /></summary>
+      <param name="context">Ambiente OWIN</param>
+      <param name="ticket">O tíquete de autenticação</param>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.GoogleReturnEndpointContext">
+      <summary>Fornece informações de contexto para provedores de middleware.</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.GoogleReturnEndpointContext.#ctor(Microsoft.Owin.IOwinContext,Microsoft.Owin.Security.AuthenticationTicket)">
+      <param name="context">Ambiente OWIN</param>
+      <param name="ticket">O tíquete de autenticação</param>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.IGoogleAuthenticationProvider">
+      <summary>Especifica métodos de retorno de chamada que o <see cref="T:Microsoft.Owin.Security.Google.GoogleAuthenticationMiddleware" /> invoca para ativar o controle de desenvolvedor sobre o processo de autenticação./&amp;amp;gt;</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.IGoogleAuthenticationProvider.ApplyRedirect(Microsoft.Owin.Security.Google.GoogleApplyRedirectContext)">
+      <summary>É chamado quando um Challenge faz com que um redirecionamento autorize um ponto de extremidade no middleware do Google OpenID</summary>
+      <param name="context">Contém URI de redirecionamento e <see cref="T:Microsoft.Owin.Security.AuthenticationProperties" /> do desafio</param>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.IGoogleAuthenticationProvider.Authenticated(Microsoft.Owin.Security.Google.GoogleAuthenticatedContext)">
+      <summary>É invocado sempre que o Google autentica um usuário com êxito</summary>
+      <returns>Uma <see cref="T:System.Threading.Tasks.Task" /> que representa a operação concluída.</returns>
+      <param name="context">Contém informações sobre a sessão de login, bem como do <see cref="T:System.Security.Claims.ClaimsIdentity" /> do usuário.</param>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.IGoogleAuthenticationProvider.ReturnEndpoint(Microsoft.Owin.Security.Google.GoogleReturnEndpointContext)">
+      <summary>Invocado antes de o <see cref="T:System.Security.Claims.ClaimsIdentity" /> ser salvo em um cookie local e o navegador ser redirecionado para a URL solicitada originalmente.</summary>
+      <returns>Uma <see cref="T:System.Threading.Tasks.Task" /> que representa a operação concluída.</returns>
+      <param name="context">Contém informações sobre a sessão de login, bem como do <see cref="T:System.Security.Claims.ClaimsIdentity" /> do usuário.</param>
+    </member>
+    <member name="T:Microsoft.Owin.Security.Google.IGoogleOAuth2AuthenticationProvider">
+      <summary>Especifica métodos de retorno de chamada que o <see cref="T:Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationMiddleware" /> invoca para ativar o controle de desenvolvedor sobre o processo de autenticação./&amp;amp;gt;</summary>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.IGoogleOAuth2AuthenticationProvider.ApplyRedirect(Microsoft.Owin.Security.Google.GoogleOAuth2ApplyRedirectContext)">
+      <summary>É chamado quando um Challenge faz com que um redirecionamento autorize um ponto de extremidade no middleware do Google OAuth 2.0</summary>
+      <param name="context">Contém URI de redirecionamento e <see cref="T:Microsoft.Owin.Security.AuthenticationProperties" /> do desafio</param>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.IGoogleOAuth2AuthenticationProvider.Authenticated(Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticatedContext)">
+      <summary>É invocado sempre que o Google autentica um usuário com êxito</summary>
+      <returns>Uma <see cref="T:System.Threading.Tasks.Task" /> que representa a operação concluída.</returns>
+      <param name="context">Contém informações sobre a sessão de login, bem como do <see cref="T:System.Security.Claims.ClaimsIdentity" /> do usuário.</param>
+    </member>
+    <member name="M:Microsoft.Owin.Security.Google.IGoogleOAuth2AuthenticationProvider.ReturnEndpoint(Microsoft.Owin.Security.Google.GoogleOAuth2ReturnEndpointContext)">
+      <summary>Invocado antes de o <see cref="T:System.Security.Claims.ClaimsIdentity" /> ser salvo em um cookie local e o navegador ser redirecionado para a URL solicitada originalmente.</summary>
+      <returns>Uma <see cref="T:System.Threading.Tasks.Task" /> que representa a operação concluída.</returns>
+      <param name="context">Contém informações de contexto e tíquete de autenticação do ponto de extremidade de retorno.</param>
+    </member>
+    <member name="T:Owin.GoogleAuthenticationExtensions">
+      <summary>Métodos de extensão para usar o <see cref="T:Microsoft.Owin.Security.Google.GoogleAuthenticationMiddleware" /></summary>
+    </member>
+    <member name="M:Owin.GoogleAuthenticationExtensions.UseGoogleAuthentication(Owin.IAppBuilder)">
+      <summary>Autenticar usuários usando o Google OpenId</summary>
+      <returns>O <see cref="T:Owin.IAppBuilder" /> atualizado</returns>
+      <param name="app">O <see cref="T:Owin.IAppBuilder" /> passado para o seu método de configuração</param>
+    </member>
+    <member name="M:Owin.GoogleAuthenticationExtensions.UseGoogleAuthentication(Owin.IAppBuilder,Microsoft.Owin.Security.Google.GoogleAuthenticationOptions)">
+      <summary>Autenticar usuários usando o Google OpenId</summary>
+      <returns>O <see cref="T:Owin.IAppBuilder" /> atualizado</returns>
+      <param name="app">O <see cref="T:Owin.IAppBuilder" /> passado para o seu método de configuração</param>
+      <param name="options">Opções de configuração de Middleware</param>
+    </member>
+    <member name="M:Owin.GoogleAuthenticationExtensions.UseGoogleAuthentication(Owin.IAppBuilder,Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions)">
+      <summary>Autenticar usuários usando o Google OAuth 2.0</summary>
+      <returns>O <see cref="T:Owin.IAppBuilder" /> atualizado</returns>
+      <param name="app">O <see cref="T:Owin.IAppBuilder" /> passado para o seu método de configuração</param>
+      <param name="options">Opções de configuração de Middleware</param>
+    </member>
+    <member name="M:Owin.GoogleAuthenticationExtensions.UseGoogleAuthentication(Owin.IAppBuilder,System.String,System.String)">
+      <summary>Autenticar usuários usando o Google OAuth 2.0</summary>
+      <returns>O <see cref="T:Owin.IAppBuilder" /> atualizado</returns>
+      <param name="app">O <see cref="T:Owin.IAppBuilder" /> passado para o seu método de configuração</param>
+      <param name="clientId">A id do cliente atribuída pelo google</param>
+      <param name="clientSecret">O segredo do cliente atribuído pelo google</param>
+    </member>
+  </members>
+</doc>
