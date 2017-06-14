@@ -445,7 +445,90 @@ Scaffold é o recurso do ASP.NET MVC que permite criar operações de criação,
 
 Scrypt do BD: https://gist.github.com/marcioalthmann/6276617
 
+Code first: vantagens e desvantagens
 
+- Isolamento do código fonte da aplicação emrelação ao banco de dados: esta é, sem dúvida, a grande vantagem do EF code first. Como o modelo é todo baseado em classes e seus respectivos objetos, é possível que desenvolvedores consigam criar aplicações com estruturas de bancos de dados complexas sem escrever uma linha sequer de SQL (Structured Query Language);
+- Produtividade: como omodelo de desenvolvimento proporcionado pelo code first é bem familiar, de forma geral, é possível obter boa produtividade por parte dos desenvolvedores;
+- Código limpo: a criação das classes POCO ajudam a manter o código limpo, uma vez que os desenvolvedores podem seguir os padrões de desenvolvimento de seus projetos;
+- Controle completo de código: como as classes POCO são criadas e mantidas pelo próprio desenvolvedor, o controle sobre aquilo que é gerado no banco de dados é bem mais fácil de ser realizado. Classes geradas automaticamente tendem a ser de difícil manutenção;
+- Simplicidade: de forma geral, o trabalho com code first tende a ser mais simples. Isso porque não existe a necessidade de se manter um arquivo .edmx. Qualquer problema gerado neste arquivo implicará necessariamente em problemas com a engine de acesso a dados.
+
+Mas nem tudo são flores. Code first possui um “problema” intrínseco, proveniente do seu esquema de trabalho que limita sua utilização em boa parte dos projetos: de forma geral, ele pode ser aplicado apenas a novos projetos, já que, dependendo da complexidade do banco de dados de aplicações já existentes, fica inviável gerar classes POCO manualmente para obter a equivalência no banco de dados físico.
+
+Dica: Se um novo projeto for seu objeto de estudo, considere utilizar o modelo code first. Os resultados deste tipo de abordagem para esta natureza de projeto costumam render excelentes frutos.
+
+Database first: vantagens e desvantagens
+
+- Isolamento completo das atividades: se o sistema já possui um banco de dados criado e/ou mantido por DBA’s, utilizar o modelo database first permitirá separar aindamais as responsabilidades do projeto, uma vez que a atualização do modelo baseado nas alterações realizadas diretamente no banco de dados funcionam muito bem;
+- Reduz drasticamente o tempo de mapeamento de bancos pré-existentes: database first reduz de forma drástica o tempo dispensado ao mapeamento de bancos de dados preexistentes;
+- Personalização de classes POCO: muito embora as classes POCO sejam geradas de forma automática pelo Entity Framework, é possível personalizá-las através de classes parciais ou até mesmo através do template de classes disponibilizado pelo EF;
+- Possibilidade demúltiplos modelos no mesmo projeto: sim, é possível possuir diferentes mapeamentos, de diferentes bancos de dados, na mesma aplicação.
+
+O principal problema relacionado ao modelo disponibilizado por database first reside na concentração de tudo dentro de um único arquivo (o edmx). Conforme o banco de dados de origem cresce em tamanho e complexidade, o arquivo também o
+faz, o que dificulta a manutenção. Em função disso, na grande maioria das vezes, é preciso que as máquinas que manipulamestes arquivos possuam boas configurações de memória.
+
+Dica: De forma geral, o modelo database first tende a ser melhor aplicável em situações em que existem aplicações comseus bancos de dados já em funcionamento (migração, reengenharia etc.), mas, diferentemente do modelo code first que pode ser aplicado na maioria esmagadora das vezes apenas em novas aplicações, se você deseja possuir controle total das ocorrências no banco de dados, database first pode ser aplicável também para novos projetos. Assim, no final das contas, este modelo acaba se tornando mais flexível.
+
+Adicionando atributos de validação nos modelos
+
+A framework .NET disponibiliza através do namespace System.ComponentModel.DataAnnotations vários atributos de validação que podem ser em modelos de classes do Entity Framework e Linq To SQL.
+
+Adicionando esses atributos de validação nos models (modelos) da nossa aplicação, o MVC fará essa validação de forma transparente, sem necessidade de codificação adicional por parte do programador para a validação básicas sobre o model.
+
+Anteriormente, utilizamos omodelo database first para gerar os models da nossa aplicação, ou seja, os models são automaticamente gerados, baseado na estrutura do banco de dados . Uma boa prática é não colocar os atributos de validação diretamente nas classes geradas automaticamente pelo Visual Studio. Isso porque sempre que o modelo do Entity Framework for atualizado com base no banco de dados, as classes serão recriadas, e com isso qualquer modificação feita anteriormente será perdida.
+
+Seguindo essa boa prática, não iremos adicionar diretamente na classe gerada pelo Visual Studio os atributos de validação. Criaremos uma classe de metadados contendo as validações e, utilizando o recurso Partial Class ou Classes Parciais, vamos vincular a classe de metadado com a classe criada automaticamente.
+
+Classes Parciais
+
+Dentre vários recursos disponibilizados pela plataforma .NET, encontramos as Partial Class ou Classes Parciais. Graças às classes parciais podemos dividir a definição de uma classe em vários arquivos físicos. A keyword partial deverá ser utilizada na definição da classe para “dizer” que a classe é parcial.
+
+Todas as classes geradas automaticamente utilizando Entity Framework recebem a keyword partial na sua definição. Devido a esse recurso conseguimos estender essas classes sem alterar o arquivo físico que é passível de modificação pelo Entity Framework.
+
+MedicoMetadado.cs
+```csharp
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+
+namespace CadeMeuMedicoAPP.Models
+{
+    [MetadataType(typeof(MedicoMetadado))]
+    public partial class Medico
+    {
+    }
+    public class MedicoMetadado
+    {
+        [Required(ErrorMessage = "Obrigatório informar o CRM")]
+        [StringLength(30, ErrorMessage = "O CRM deve possuir no máximo 30 caracteres")]
+        public string CRM { get; set; }
+        [Required(ErrorMessage = "Obrigatório informar o Nome")]
+        [StringLength(80, ErrorMessage = "O Nome deve possuir no máximo 80 caracteres")]
+        public string Nome { get; set; }
+        [Required(ErrorMessage = "Obrigatório informar o Endereço")]
+        [StringLength(100, ErrorMessage = "O Endereço deve possuir no máximo 100 caracteres")]
+        public string Endereco { get; set; }
+        [Required(ErrorMessage = "Obrigatório informar o Bairro")]
+        [StringLength(60, ErrorMessage = "O Bairro deve possuir no máximo 60 caracteres")]
+        public string Bairro { get; set; }
+        [Required(ErrorMessage = "Obrigatório informar o E-mail")]
+        [StringLength(100, ErrorMessage = "O E-mail deve possuir no máximo 100 caracteres")]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "Obrigatório informar se Atende por Convênio")]
+        public bool AtendePorConvenio { get; set; }
+        [Required(ErrorMessage = "Obrigatório informar se Tem Clínica")]
+        public bool TemClinica { get; set; }
+        [StringLength(80, ErrorMessage = "O Website deve possuir no máximo 80 caracteres")]
+        public string WebsiteBlog { get; set; }
+        [Required(ErrorMessage = "Obrigatório informar a Cidade")]
+        public int IDCidade { get; set; }
+        [Required(ErrorMessage = "Obrigatório informar a Especialidade")]
+        public int IDEspecialidade { get; set; }
+    }
+}
+```
 
 
 [Voltar ao Índice](#indice)
