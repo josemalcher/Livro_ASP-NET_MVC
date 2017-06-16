@@ -73,3 +73,7 @@ C:\Users\josemalcher\Documents\09-Workspaces\workspace-LIVRO-CasaDoCodigo_ASP-NE
 C:\Users\josemalcher\Documents\09-Workspaces\workspace-LIVRO-CasaDoCodigo_ASP-NET_MVC\CadeMeuMedicoAPP\CadeMeuMedicoAPP\obj\Debug\CadeMeuMedicoAPP.csprojResolveAssemblyReference.cache
 C:\Users\josemalcher\Documents\09-Workspaces\workspace-LIVRO-CasaDoCodigo_ASP-NET_MVC\CadeMeuMedicoAPP\CadeMeuMedicoAPP\obj\Debug\CadeMeuMedicoAPP.dll
 C:\Users\josemalcher\Documents\09-Workspaces\workspace-LIVRO-CasaDoCodigo_ASP-NET_MVC\CadeMeuMedicoAPP\CadeMeuMedicoAPP\obj\Debug\CadeMeuMedicoAPP.pdb
+C:\Users\josemalcher\Documents\09-Workspaces\workspace-LIVRO-CasaDoCodigo_ASP-NET_MVC\CadeMeuMedicoAPP\CadeMeuMedicoAPP\bin\EntityFramework.dll
+C:\Users\josemalcher\Documents\09-Workspaces\workspace-LIVRO-CasaDoCodigo_ASP-NET_MVC\CadeMeuMedicoAPP\CadeMeuMedicoAPP\bin\EntityFramework.SqlServer.dll
+C:\Users\josemalcher\Documents\09-Workspaces\workspace-LIVRO-CasaDoCodigo_ASP-NET_MVC\CadeMeuMedicoAPP\CadeMeuMedicoAPP\bin\EntityFramework.xml
+C:\Users\josemalcher\Documents\09-Workspaces\workspace-LIVRO-CasaDoCodigo_ASP-NET_MVC\CadeMeuMedicoAPP\CadeMeuMedicoAPP\bin\EntityFramework.SqlServer.xml

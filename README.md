@@ -537,6 +537,40 @@ namespace CadeMeuMedicoAPP.Models
 
 ## <a name="parte5">Controllers: Adicionando comportamento a nossa aplicação</a>
 
+Os controllers serão responsáveis por receber e transformar as requisições enviadas pelas views em informações que serão utilizadas pelas regras de negócio da aplicação, ou seja, os models. O contrário também é verdadeiro, os controllers têm a responsabilidade de selecionar a view correta para apresentação de informações ao usuário. 
+
+Ao receber uma requisição, os controllers devem efetuar alguma ação para que a requisição seja processada, essas ações são as actions. As actions são métodos definidos no controller, e o controller pode ter várias actions.
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace CadeMeuMedicoAPP.Controllers
+{
+    public class MensagensController : Controller
+    {
+        public ActionResult BomDia()
+        {
+            return Content("Bom dia... hoje você acordou cedo!");
+        }
+        public ActionResult BoaTarde()
+        {
+            return Content("Boa tarde... não durma na mesa do trabalho!");
+        }
+    }
+}
+
+// /mensagens/boatarde
+```
+
+ActionResult é o tipo de retorno mais genérico existente dentro do framework ASP.NET MVC. Ele suporta qualquer tipo de resultado que possa ser retornado, sendo osmais comuns: JsonResult, ContentResult, EmptyResult, FileResult, JavaScriptResult, RedirectResult. Cada um dos mencionados nada mais é do que a extensão (através de herança) de ActionResult. Sua implementação é extremamente simples, contendo apenas um método para ser implementado na classe que a herda, haja vista que ActionResult é uma classe abstrata.
+
+Desta forma, ContentResult trata-se de uma implementação extensiva da classe ActionResult, que permite formatar qualquer tipo de conteúdo que se deseja retornar, especificando inclusive, seu ContentType. Textos simples (como nosso exemplo) até sentenças mais complexas (como nodos de XML, por exemplo) podem ser retornados através de Content.
+
+
 [Voltar ao Índice](#indice)
 
 ---
