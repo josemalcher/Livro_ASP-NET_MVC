@@ -570,6 +570,87 @@ ActionResult é o tipo de retorno mais genérico existente dentro do framework A
 
 Desta forma, ContentResult trata-se de uma implementação extensiva da classe ActionResult, que permite formatar qualquer tipo de conteúdo que se deseja retornar, especificando inclusive, seu ContentType. Textos simples (como nosso exemplo) até sentenças mais complexas (como nodos de XML, por exemplo) podem ser retornados através de Content.
 
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using CadeMeuMedicoAPP.Models;
+
+namespace CadeMeuMedicoAPP.Controllers
+{
+    public class MedicosController : Controller
+    {
+        private EntidadesCadeMeuMedicoBDEntities db = new EntidadesCadeMeuMedicoBDEntities();
+
+        public ActionResult Index()
+        {
+            //var medicos = db.Medicos.Include(m => m.Cidade).Include(m => m.Especialidade).ToList();
+            var medicos = db.Medicos.Include("Cidades").Include("Especialidades").ToList();
+            return View(medicos);
+        }
+    }
+}
+```
+O aspecto a ser ressaltado aqui é o retorno da action Index. Como você pode perceber, estamos retornando uma lista ( .ToList()) de todos os médicos ( .Medicos) disponíveis no contexto (db).
+
+A utilização dos métodos .Include(). A utilizar o método .Include, informamos ao Entity Framework que além do modelo (tabela) que estamos carregando, queremos obter seus relacionamentos, ou seja, nesse caso estamos listando os médicos e obtendo sua respectiva “Especialidade” e “Cidade”.
+
+```csharp
+@model IEnumerable<CadeMeuMedicoAPP.Models.Medicos>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IDCidade)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IDEspecialidade)
+        </th>
+        
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Cidades.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Especialidades.Nome)
+        </td>
+        
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IDMedico }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IDMedico }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IDMedico })
+        </td>
+    </tr>
+}
+
+</table>
+
+
+```
+
+
+
 
 [Voltar ao Índice](#indice)
 
