@@ -38,5 +38,7 @@ namespace CadeMeuMedicoAPP.Controllers
             ViewBag.IDEspecialidade = new SelectList(db.Especialidades, "IDEspecialidade", "Nome", "IDEspecialidade");
             return View(medicos);
         }
+
+
     }
 }

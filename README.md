@@ -828,7 +828,7 @@ O código da action que receberá, em um parâmetro, o model preenchido pelo usu
         }
 
         [HttpPost]
-        public ActionResult Adiionar(Medicos medico)
+        public ActionResult Adicionar(Medicos medico)
         {
             if (ModelState.IsValid)
             {
@@ -845,6 +845,9 @@ O código da action que receberá, em um parâmetro, o model preenchido pelo usu
 O atributo HttpPost na action diz ao framework MVC qual action ele deve executar quando a requisição HTTP possuir o verbo POST. Isso é necessário porque a URL /Medicos/Adicionar é utilizada paramostrar o formulário e também para enviar os dados preenchidos. O que muda nas requisições são os verbos executados e os valores enviados para o servidor.
 
 Também possui a action que será executada quando a requisição possuir o verbo GET e é ela quem retorna a página com o formulário. Apesar de o atributo HttpGet existir, ele não precisa ser adicionado porque actions sem atributo, por convenção, são consideradas HttpGet.
+
+### Edição
+
 
 
 
