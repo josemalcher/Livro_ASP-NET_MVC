@@ -152,7 +152,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EspecialidadeMetadado.cs" />
-    <Compile Include="Models\MedicoMetadado.cs" />
+    <Compile Include="Models\MedicosMetadado.cs" />
     <Compile Include="Models\Especialidades.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -186,6 +186,7 @@
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\Medicos\Index.cshtml" />
+    <Content Include="Views\Medicos\Adicionar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

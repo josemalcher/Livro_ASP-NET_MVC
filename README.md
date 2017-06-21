@@ -495,35 +495,44 @@ using System.Web;
 
 namespace CadeMeuMedicoAPP.Models
 {
-    [MetadataType(typeof(MedicoMetadado))]
-    public partial class Medico
+    [MetadataType(typeof(MedicosMetadado))]
+    public partial class Medicos
     {
     }
-    public class MedicoMetadado
+    public class MedicosMetadado
     {
         [Required(ErrorMessage = "Obrigatório informar o CRM")]
         [StringLength(30, ErrorMessage = "O CRM deve possuir no máximo 30 caracteres")]
         public string CRM { get; set; }
+
         [Required(ErrorMessage = "Obrigatório informar o Nome")]
         [StringLength(80, ErrorMessage = "O Nome deve possuir no máximo 80 caracteres")]
         public string Nome { get; set; }
+
         [Required(ErrorMessage = "Obrigatório informar o Endereço")]
         [StringLength(100, ErrorMessage = "O Endereço deve possuir no máximo 100 caracteres")]
         public string Endereco { get; set; }
+
         [Required(ErrorMessage = "Obrigatório informar o Bairro")]
         [StringLength(60, ErrorMessage = "O Bairro deve possuir no máximo 60 caracteres")]
         public string Bairro { get; set; }
+
         [Required(ErrorMessage = "Obrigatório informar o E-mail")]
         [StringLength(100, ErrorMessage = "O E-mail deve possuir no máximo 100 caracteres")]
         public string Email { get; set; }
+
         [Required(ErrorMessage = "Obrigatório informar se Atende por Convênio")]
         public bool AtendePorConvenio { get; set; }
+
         [Required(ErrorMessage = "Obrigatório informar se Tem Clínica")]
         public bool TemClinica { get; set; }
+
         [StringLength(80, ErrorMessage = "O Website deve possuir no máximo 80 caracteres")]
         public string WebsiteBlog { get; set; }
+
         [Required(ErrorMessage = "Obrigatório informar a Cidade")]
         public int IDCidade { get; set; }
+
         [Required(ErrorMessage = "Obrigatório informar a Especialidade")]
         public int IDEspecialidade { get; set; }
     }
@@ -649,6 +658,193 @@ A utilização dos métodos .Include(). A utilizar o método .Include, informamo
 
 ```
 
+### Adicionar Médico
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using CadeMeuMedicoAPP.Models;
+
+namespace CadeMeuMedicoAPP.Controllers
+{
+    public class MedicosController : Controller
+    {
+        private EntidadesCadeMeuMedicoBDEntities db = new EntidadesCadeMeuMedicoBDEntities();
+
+        public ActionResult Index()
+        {
+            var medicos = db.Medicos.Include("Cidades").Include("Especialidades").ToList();
+            return View(medicos);
+        }
+
+        public ActionResult Adicionar()
+        {
+            ViewBag.IDCidade = new SelectList(db.Cidades, "IDCidade", "Nome");
+            ViewBag.IDEspecialidade = new SelectList(db.Especialidades,"IDEspecialidade", "Nome");
+            return View();
+        }
+    }
+}
+```
+
+Podemos utilizar o ViewBag para transferir dados doController para aView. Ele é uma propriedade do tipo dynamic, por isso podemos criar propriedades dinamicamente. Em nossa action criamos duas propriedades, IDCidade e IDEspecialidade,
+cada uma coma lista de Cidades e Especialidades quemais adiante será apresentada ao usuário.
+
+Nas propriedades dinâmicas da ViewBag retornarmos já o elemento que será apresentado na View. Para isso utilizamos o helper SelectList—você verá mais sobre os Helpers no próximo capítulo sobre Views.
+
+```csharp
+@model CadeMeuMedicoAPP.Models.Medicos
+
+@{
+    ViewBag.Title = "Adicionar";
+}
+
+<h2>Adicionar</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Medicos</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.CRM, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CRM, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CRM, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Endereco, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Endereco, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Endereco, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Bairro, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Bairro, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Bairro, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AtendePorConvenio, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.AtendePorConvenio)
+                    @Html.ValidationMessageFor(model => model.AtendePorConvenio, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TemClinica, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.TemClinica)
+                    @Html.ValidationMessageFor(model => model.TemClinica, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WebsiteBlog, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.WebsiteBlog, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.WebsiteBlog, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IDCidade, "IDCidade", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("IDCidade", null, htmlAttributes: new { @class = "form-control" })
+                //@Html.DropDownList("IDCidade", String.Empty)
+                @Html.ValidationMessageFor(model => model.IDCidade, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IDEspecialidade, "IDEspecialidade", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("IDEspecialidade", null, htmlAttributes: new { @class = "form-control" })
+                //@Html.DropDownList("IDEspecialidade", String.Empty)
+                @Html.ValidationMessageFor(model => model.IDEspecialidade, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+```
+
+Agora que possuímos o fomulário pronto e funcionando, precisamos gravar os dados provenientes dele no banco de dados. Para isso, é preciso criar a action que receberá ummodel já comos dados que o usuário preencheu utilizando o formulário da view. Primeiro, é necessário compreender os verbos GET e POST do do protocolo HTTP. Apesar demais verbos estarem disponíveis no HTTP (DELETE, OPTIONS, entre outros), para a nossa aplicação de exemplo utilizaremos apenasGET
+e POST.
+
+Em linhas gerais, o verbo GET é utilizado para obter um recurso do servidor, enquanto o verbo POST serve para adicionar um novo recurso. Por recurso, entenda páginas, imagens, estilos, scripts, dados etc.
+
+O código da action que receberá, em um parâmetro, o model preenchido pelo usuário na view. Além de validar o modelo e adicionar no banco de dados se nenhuma inconsistência for encontrada, note que a action também possui o nome Adicionar, entretanto, encontra-se decorada com o atributo HttpPost. Desta forma, pelo atributo decorativo da Action, o ASP.NET MVC consegue diferenciar os métodos com mesmo nome.
+
+```csharp
+ public ActionResult Adicionar()
+        {
+            ViewBag.IDCidade = new SelectList(db.Cidades, "IDCidade", "Nome");
+            ViewBag.IDEspecialidade = new SelectList(db.Especialidades,"IDEspecialidade", "Nome");
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Adiionar(Medicos medico)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Medicos.Add(medico);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.IDCidade = new SelectList(db.Cidades, "IDCidade", "Nome", "IDCidade");
+            ViewBag.IDEspecialidade = new SelectList(db.Especialidades, "IDEspecialidade", "Nome", "IDEspecialidade");
+            return View(medico);
+        }
+```
+O atributo HttpPost na action diz ao framework MVC qual action ele deve executar quando a requisição HTTP possuir o verbo POST. Isso é necessário porque a URL /Medicos/Adicionar é utilizada paramostrar o formulário e também para enviar os dados preenchidos. O que muda nas requisições são os verbos executados e os valores enviados para o servidor.
+
+Também possui a action que será executada quando a requisição possuir o verbo GET e é ela quem retorna a página com o formulário. Apesar de o atributo HttpGet existir, ele não precisa ser adicionado porque actions sem atributo, por convenção, são consideradas HttpGet.
 
 
 
