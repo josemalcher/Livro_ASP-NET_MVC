@@ -992,6 +992,25 @@ public ActionResult Editar(long id)
 
 ```
 
+### Excluir
+
+```csharp
+[HttpPost]
+        public String Excluir(long id)
+        {
+            try
+            {
+                Medicos medico = db.Medicos.Find(id);
+                db.Medicos.Remove(medico);
+                db.SaveChanges();
+                return Boolean.TrueString;
+            }
+            catch
+            {
+                return Boolean.FalseString;
+            }
+        } // Ação implementada por Ajax no prox. cap.
+```
 
 
 [Voltar ao Índice](#indice)
