@@ -1019,6 +1019,281 @@ public ActionResult Editar(long id)
 
 ## <a name="parte6">Views: interagindo com o usuário</a>
 
+Visões (ou como a grandemaioria dos desenvolvedores prefere chamar—views) são os elementos que constituem a “ponta externa do iceberg” nas aplicações ASP.NET MVC.
+
+O fluxo de operação do framework MVC até a view. Fonte: http://www.arrangeactassert.com/
+
+![View](https://github.com/josemalcher/Livro_ASP-NET_MVC/blob/master/img/view.PNG?raw=true)
+
+As famosas view engines ou simplesmente “engenhos de renderização”, são mecanismos presentes em todas as versões framework ASP.NET. Aqui chamamos de view engine omecanismo interno da plataforma (em nosso caso, ASP.NET) que possibilita a transformação de diretivas exclusivamente de servidor em código HTML, legível pelo navegador, ainda no container web para posterior exibição ao usuário final.
+
+A ideia fundamental neste caso é a de proporcionar ao desenvolvedor o alto poder programático oferecido pelas linguagens de servidor — como as tags dos componentes de servidor do ASP.NET, por exemplo — e passar a responsabilidade de geração do código objeto no browser para o container web.
+
+### ASPX ou ASP.NET Razor
+
+O fato de ASP.NET se tratar de uma plataforma e não uma linguagem de programação. Justamente por este motivo, todas as tecnologias agrupadas na plataforma recebem o prefixo “ASP.NET”, como ASP.NET MVC.
+
+Falando especificamente de view engines, atualmente encontram-se disponíveis na plataforma ASP.NET duas opções delas: ASP.NET (dos famosos arquivos com extensão *.ASPX) e ASP.NET Razor (esta última, mais recente). Assim, ao criar
+um novo projeto web utilizando qualquer das tecnologias disponíveis na plataforma ASP.NET, o desenvolvedor poderá optar pela utilização daquela view engine quemelhor atende às suas necessidades.
+
+ASP.NET Razor não é uma linguagem de programação. É, sim, uma nova forma de estruturar views que precisam de alguma porção de código processada no servidor de aplicação.
+
+Costuma-se dizer que Razor é um modelo de escrita de código por não possuir uma linguagem predefinida. É possível utilizar o modelo de programação oferecido pelo Razor utilizando as duas principais linguagens da .NET framework: C# ou VB. No caso, arquivos Razor estruturados com base em C# possuem a extensão “*.cshtml”, enquanto arquivos estruturados com base em VB possuem a extensão “*.vbhtml”.
+
+Repetindo itens em uma lista com ASPX:
+
+```csharp
+<% foreach(var item in itens) { %>
+<span>
+<%: item.ValorUnitario %>
+</span>
+<% } %>
+```
+
+Repetindo itens em uma lista com Razor:
+
+```csharp
+@foreach(var item in itens) {
+<span>
+@item.ValorUnitario
+</span>
+}
+```
+Estes trechos de códigos são decisivos para apresentarmos algumas conceitos iniciais importantes acerca da view engine Razor. A primeira observação pertinente em relação às abordagens é a diferença que demarca os blocos de código. Enquanto views que utilizamASPX utilizamdelimitadores “<% %>”, Razor utiliza apenas amarcação de “@”. Outra observação (não menos importante) é que o motor de renderização do Razor é “inteligente”. Perceba que, enquanto ASPX tem uma separação explícita entre suas tags e as HTML, Razor não a possui. Isso ocorre porque omotor de renderização do Razor separa de forma automática HTML de código C# (ou Visual Basic que também é suportado, é importante que se diga).
+
+poderíamos utilizar uma abordagem conhecida como “Bloco de múltiplas linhas”. Caso uma linha seja suficiente para expressar um comportamento através do Razor, o método conhecido como “inline” pode ser utilizado. A listagem 3 apresenta a diferença entre as abordagens.
+
+```csharp
+@{
+//Multi-linhas
+ViewBag.Title = "Teste de layout";
+var Data = DateTime.Now.DayOfWeek;
+string StringConcatenada = "Hoje é '" + Data.ToString()
++ "'. Seja bem vindo(a)!";
+}
+<!-- Inline -->
+<h2>@StringConcatenada</h2>
+```
+
+Como você pôde perceber, com a utilização do Razor é possível declarar variáveis e instanciar objetos, e muito mais. É possível também, criar estruturas de repetição que permitem ao desenvolvedor navegar
+entre estruturas de dados simples (arrays, por exemplo) ou complexas (dicionários de dados, listasmulti-valoradas etc.). Se toda a estrutura C#/VB é suportada na view que utiliza Razor, estruturas de tomadas de decisão (falamos if/else, switch/case e suas variações) também as são — Tudo isso utilizando não apenas o modelo de programação orientado a objetos, já familiar para quem trabalha com .NET, mas principalmente, utilizando a mesma sintaxe.
+
+Verificando valor de entrada na view com if/else:
+
+```csharp
+@{
+ViewBag.Title = "Teste de layout";
+var Data = DateTime.Now.DayOfWeek;
+string StringConcatenada = Data.ToString();
+}
+
+<!-- Verificando o dia retornado -->
+@if (StringConcatenada == "Friday") {
+<h2>Sexta-feira</h2>
+}
+else
+{
+<h2>Outro dia qualquer da semana.</h2>
+}
+```
+
+### Helpers
+
+A criação de helpers é um recurso que se encontra disponível no contexto do ASP.NET Razor desde a primeira versão. Inicialmente, Razor permitia que os helpers apenas retornassem strings para as views. Felizmente, esta realidade mudou e, hoje, podemos criar helpers que retornamporções e HTML comobjetos atrelados. Isso dá ao desenvolvedor maior poder e, consequentemente, maior robustez às views.
+
+é importante saber que existem dois modelos para a criação de helpers. A saber, na própria view onde ele será utilizado
+ou de forma que ele possa ser reaproveitado ao longo de múltiplas views. Como o objetivo principal dos helpers é servir comomecanismo de refactoring de códigos na view,
+
+O diretório “App_Code” é outra das convenções (CoC) implementadas pelo frameworkASP.NET MVC para diretórios. Ao adicionar uma classe ou arquivo Razor, o projetoMVC entenderá que o referido arquivo trata-se de um script que poderá ser reutilizado em outras partes da aplicação como um código agregado de função específica (como é o caso dos helpers).
+
+### Prática
+
+```sql
+CREATE TABLE BannersPublicitarios
+(
+IDBanner BIGINT IDENTITY NOT NULL,
+TituloCampanha VARCHAR(60) NOT NULL,
+BannerCampanha VARCHAR(200) NOT NULL,
+LinkBanner VARCHAR(200) NULL,
+PRIMARY KEY(IDBanner)
+);
+INSERT INTO BannersPublicitarios
+(TituloCampanha, BannerCampanha, LinkBanner) VALUES
+('Campanha Conio', 'logo-conio-cademeumedico.png','http://conio.com.br')
+INSERT INTO BannersPublicitarios
+(TituloCampanha, BannerCampanha, LinkBanner) VALUES
+('Campanha Casa do Código', 'banner-cdc-cademeumedico.png',
+'http://casadocodigo.com.br')
+```
+
+BannersPublicitarios.cshtml
+
+```csharp
+@using CadeMeuMedicoAPP.Models;
+
+@helper RetornaDoisBannersMaisRecentes() {
+    var bd = new CadeMeuMedicoAPP.Models.EntidadesCadeMeuMedicoBDEntities();
+    var banners = bd.BannersPublicitarios.OrderByDescending(b => b.IDBanner).Take(2);
+
+    <div style="width: 100%; text-align: left; border: 1px solid #efefef; padding: 10px; display: inline-block;">
+        
+        @foreach (var b in banners)
+        {
+            <div style="width: 125px; height: 125px; float: left; margin-right: 10px;">
+                <a href="@b.LinkBanner">
+                    <img src="~/Uploads/Banners/@b.BannerCampanha" title="@b.TituloCampanha"/>
+                </a>
+            </div>
+        }
+    </div>
+}
+```
+
+Alguns pontos importantes relacionados ao código apresentado pela listagem 6:
+
+- Utilizamos a diretiva using direto da view. Lembre-se, aqui é programação C# da forma como você já conhece. O que Razor faz é possibilitar tal mecanismo em uma view. Nunca é demais lembrar;
+- Através da diretiva “@helper” informamos ao framework que o trecho de código a seguir deverá se comportar como um helper;
+- Na sequência, crio uma instância do modelo de dados, busco os dois banners mais recentes e exibo já na estrutura HTML com Razor.
+
+Invocando o helper de banners publicitários:
+
+```csharp
+    @BannersPublicitarios.RetornaDoisBannersMaisRecentes();
+```
+
+Note que a chamada é simples de ser realizada. Basta informar o nome do arquivo helper (no caso “BannersPublicitarios”) e, na sequência, invocar o método “RetornaDoisBannersMaisRecentes()”. Isso automaticamente nos diz que um helper pode implementar vários métodos. Em nosso exemplo, poderíamos ter tranquilamente, um segundo método chamado “RetornaSeisBannersMaisRecentes()” etc.
+
+Vale observar aqui que o modelo ideal seria retornar os dados através de um controller e, aí sim, com os dados já disponíveis, navegar entre eles através da view utilizando Razor.
+
+### Helpers nativos
+
+Ainda sobre os helpers, é importante notar o seguinte: existem aqueles personalizados (criados sob demanda, a exemplo do que fizemos no tópico anterior) e existem os helpers nativos do framework, que podem ser utilizados para otimizar algumas operações com views.
+
+@Html é um helper nativo que encapsula a criação de componentes HTML através de código com Razor. O que queremos dizer com isso é que, quando você escreve a linha @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }), por exemplo, você está dizendo ao motor de renderização do Razor que ele deverá realizar um render para a tag <a> do HTML em tempo de execução.
+
+- Quando mudanças estruturais ocorrerem: para muitos tipos de projetos, o modelo de rotas padrão não endereça as demandas. Assim, ao adicionar uma rota personalizada para sua aplicação, por exemplo, no caso de a view estar estruturada com helpers como o @Html, de forma automática o framework é capaz de ajustar os links das aplicações.
+- Linguagem mais familiar para desenvolvedores escreverem views: HTML é, de forma geral, mais natural para designers do que para desenvolvedores. Como a nomenclatura para a utilização dos helpers é mais próxima do C#, o processo de escrita de views para desenvolvedores acaba sendo mais suave.
+
+De forma geral, o preço a se pagar pelo uso excessivo de helpers nas views é a singela perda de desempenho, uma vez que, ao fazê-lo, colocamos uma camada a mais de processamento sobre o processo de renderização (lembre-se, Razor é processado no servidor).
+
+Vale mencionar, ainda, que existe uma grande quantidade de helpers já prontos, que realizam diferentes tarefas, disponíveis de forma gratuita no repositório público do NuGet. Dentre os mais baixados, podemos citar: integração com Twitter (a.k.a., Twitter.Goodies), Facebook, PayPal e Amazon. O processo de instalação destes helpers já é conhecido por você, uma vez que segue o mesmo padrão imposto pelo “Library PackageManager” (NuGet) do Visual Studio.
+
+
+### Recursos para explicitar caminhos (path’s)
+
+A Microsoft propôs um modelo extremamente funcional e elegante para realizar esta tarefa em suas view engines. Para que uma referência a determinado arquivo possa ser realizada, basta adicionar o símbolo “~” (til) no início do caminho absoluto. Desta forma, paraumcaminho absoluto “/Uploads/Imagens/” teríamos uma nova especificação deste mesmo caminho da seguinte forma: “~/Uploads/Imagens”. Ao assim fazer, estamos “dizendo” ao IIS que, independente do diretório atual, ele deve deve buscar o recurso informado a partir da raiz até o ponto especificado.
+
+### Renderizações parciais
+
+No sentido de desacoplar ainda mais a master page (você se lembra da história do “dividir pra conquistar"?), encontra-se disponível nas view engines da Microsoft um recurso conhecido como “renderizações parciais”.
+
+A ideia com este recurso é que você renderize porções específicas de código em pontos distintos da master page. Imagine, por exemplo, que seja importante que o menu da aplicação seja carregado de forma assíncrona enquanto o restante da view
+seja carregado no primeiro post.
+
+Você poderia utilizar a diretiva “@RenderSection()” ou “@RenderPartial()” para buscar uma view parcial que carrega (de forma assíncrona comjQuery, por exemplo) seu menu. A utilização de “@RenderPartial()” já foi demonstrada neste livro, no
+capítulo 3. A diferença básica de “@RenderPartial” para “@RenderSection” é que a primeira temo poder de renderizaruma viewparcial completa, e a segunda renderiza seções especificas. Para “@RenderPartial”, você deverá especificar a view parcial que será renderizada naquele ponto.
+
+### Agregação e minificação
+
+Estamos falando de espaços em branco, comentários e união das linhas (minificação), assim como, a junção em um único arquivo em memória (bundle) de todos os recursos deste tipo (agregação).
+
+Referenciando os arquivos de forma manual em uma view:
+
+```html
+<link href="~/styles/reset.css" rel="Stylesheet" />
+<link href="~/styles/styles.css" rel="Stylesheet" />
+<link href="~/styles/content.css" rel="Stylesheet" />
+<link href="~/styles/globals.css" rel="Stylesheet" />
+<link href="~/styles/forms.css" rel="Stylesheet" />
+<link href="~/styles/menu.css" rel="Stylesheet" />
+```
+
+Modelo de referencia contemplando agregação e minificação:
+
+```html
+<link href="~/styles" rel="Stylesheet" />
+```
+
+Quando a view Razor ou ASPX encontrar este modelo de referência, o que ela (framework) fará é verificar todos os arquivos CSS dentro do diretório apontado (neste caso “styles”), combiná-los, minificá-los e, na sequência, devolver uma resposta HTTP de um único arquivo CSS. Assim, ao invés de seis chamadas serem realizadas junto ao servidor, este número cai para apenas uma chamada.
+
+### Mobilidade nativa com ASP.NET MVC
+
+Quando falamos emmobilidade comASP.NETMVC, podemos imaginar aomenos três abordagens distintas, passíveis de implementação. Estas são apresentadas resumidamente na lista a seguir:
+
+- Utilizar os mesmos controllers e views comdiferentes layouts Razor dependendo do dispositivo do usuário. A ideia aqui é que você utilize a mesma lógica implementada nos controllers e actions, assim como as mesmas views. Neste caso, seriamrenderizados em tempo de execução apenas os layouts. Esta abordagem é recomendada, de forma geral, quando se deseja apenas exibir dados (grids, por exemplo) de forma personalizada, ajustada ao dispositivo;
+- Utilizar os mesmos controllers, entretanto, renderizando views específicas, de acordo com o dispositivo. Neste caso, ao invés de renderizarmos layouts personalizados, renderizamos views específicas. Esta opção deve ser sua escolha se você identificar a necessidade de modificar muito o HTML para os diferentes dispositivos. Outro aspecto importante a ser observado é se é preciso manter o fluxo de operações da aplicação ao longo dos dispositivos;
+- Criar áreas separadas para projetos mobile e projetos desktop. Este é o modelo onde a separação de camadas é mais definitiva. Existem diferentes projetos, mobile e desktop (com diferentes controllers, actions e views) em uma mesma solução. Ao receber a solicitação, o framework identifica a resolução do dispositivo e direciona o fluxo de operação para o projeto adequado na solução.
+
+Imagine que para a aplicação “Cadê meu médico?”, escolhêssemos a primeira abordagem apresentada pela lista anterior. Para que a aplicação seja capaz de renderizar o layout correto (claro, imaginando que exista um layout chamado “_LayoutMobile.cshtml”) bastaria escrever o código apresentado pela listagem 11 no interior do arquivo “_ViewStart.cshtml”.
+
+Verificando o layout a ser renderizado:
+
+```csharp
+@{
+Layout = Request.Browser.IsMobileDevice ?
+"~/Views/Shared/_LayoutMobile.cshtml"
+: "~/Views/Shared/_Layout.cshtml";
+}
+```
+
+Se optássemos pela segunda abordagem, poderíamos criar uma sobrecarga do método “FindView” (de “ViewEngineResult”) para encontrar a view adequada:
+
+Encontrando views específicas (sugestão de Scott Hanselman em seu blog):
+
+```csharp
+public class MobileCapableWebFormViewEngine : WebFormViewEngine
+{
+    public override ViewEngineResult FindView( ControllerContext controllerContext, string viewName, string masterName, bool useCache)
+    {
+        ViewEngineResult result = null;
+        var request = controllerContext.HttpContext.Request;
+        if (request.Browser.IsMobileDevice)
+        {
+            result = base.FindView(controllerContext, "Mobile/" + viewName, masterName, useCache);
+        }
+        if (result == null || result.View == null)
+        {
+            result = base.FindView(controllerContext, viewName, masterName, useCache);
+        }
+        return result;
+    }
+}
+```
+Escolhendo a terceira opção, poderíamos criar uma área específica para uma aplicaçãomóvel dentro de nosso projeto. Para isso, bastaria clicar como botão direito sobre ele e clicar na opção Add > Area
+
+No interior dessa área podemos adicionar controllers e views normalmente, como se fosse um projeto à parte. Assim, para fins didáticos, podemos adicionar um controller “HomeController” dentro da nova área. Este controller poderá atuar como o novo controlador padrão da aplicação em dispositivos móveis, após isso, realizar dois pequenos ajustes no padrão rotas da aplicação (através dos arquivos “RouteConfig.cs”), para garantir que tal controller poderá ser alcançado
+
+Ajustando a rota padrão da aplicação:
+
+```csharp
+//Alterando a rota padrão...
+public override void RegisterArea(AreaRegistrationContext context)
+{
+    context.MapRoute(
+    "Mobile",
+    "Mobile/{controller}/{action}/{id}",
+    new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+    );
+    }
+    
+    //Dando prioridade para o controller de desktop
+    public static void RegisterRoutes(RouteCollection routes)
+    {
+        routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+        routes.MapRoute(
+        "Default",
+        "{controller}/{action}/{id}",
+        new { controller = "Home", action = "Index",
+        id = UrlParameter.Optional },
+        // Adicione o namespace dos controladores desktop a seguir
+        new[] { "CadeMeuMedico.Controllers" }
+    );
+}
+```
+Na sequência, para coroar o trabalho, bastaria criar um filtro que redirecionaria o usuário para o conteúdo mobile, se isto for pertinente.
+
+
+
 [Voltar ao Índice](#indice)
 
 ---

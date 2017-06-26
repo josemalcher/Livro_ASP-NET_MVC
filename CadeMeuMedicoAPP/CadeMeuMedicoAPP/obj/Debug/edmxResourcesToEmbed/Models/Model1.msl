@@ -45,5 +45,15 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="BannersPublicitarios">
+      <EntityTypeMapping TypeName="CadeMeuMedicoBDModel.BannersPublicitarios">
+        <MappingFragment StoreEntitySet="BannersPublicitarios">
+          <ScalarProperty Name="LinkBanner" ColumnName="LinkBanner" />
+          <ScalarProperty Name="BannerCampanha" ColumnName="BannerCampanha" />
+          <ScalarProperty Name="TituloCampanha" ColumnName="TituloCampanha" />
+          <ScalarProperty Name="IDBanner" ColumnName="IDBanner" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

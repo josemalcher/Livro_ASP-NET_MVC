@@ -24,24 +24,26 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nome)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Cidades.Nome)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Especialidades.Nome)
-        </td>
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cidades.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Especialidades.Nome)
+            </td>
         
-        <td>
-            @Html.ActionLink("Editar", "Editar", new { id=item.IDMedico }) |
-            @Html.ActionLink("Details", "Details", new { id=item.IDMedico }) |
-            @Html.ActionLink("Excluir", "Excluir", new { id=item.IDMedico })
-        </td>
-    </tr>
-}
+            <td>
+                @Html.ActionLink("Editar", "Editar", new { id=item.IDMedico }) |
+                @Html.ActionLink("Details", "Details", new { id=item.IDMedico }) |
+                @Html.ActionLink("Excluir", "Excluir", new { id=item.IDMedico })
+            </td>
+        </tr>
+    }
 
 </table>
+
+@BannersPublicitarios.RetornaDoisBannersMaisRecentes();
