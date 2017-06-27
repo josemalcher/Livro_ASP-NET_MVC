@@ -1467,7 +1467,45 @@ Mais informações (https://www.asp.net/mvc/overview/security)[https://www.asp.n
 
 ## <a name="parte8">Publicando sua aplicação</a>
 
+Você pode realizar o setup do ambiente manualmente (instalando manualmente cada um dos componentes mencionados na lista anterior) ou pode utilizar uma ferramenta disponibilizada gratuitamente pelaMicrosoft, oWebPI (acrônimo paraWeb Platform Installer), que automatiza todo o processo de instalação e configuração de ambiente no servidor remoto, gerenciando inclusive, as dependências de cada elemento. Você pode encontrar mais informações sobre esta ferramenta seguindo este link: http://bit.ly/webpiaspnetmvc.
 
+### Ambientes de host
+
+- Hospedagem compartilhada (a mais comum): existem praticamente infinitas opções no Brasil ou fora dele para realizar o host de aplicações ASP.NET. Uma rápida busca no Google dará veracidade a esta afirmação. Omodelo tradicional de host (conhecido como “compartilhado”) contemplamúltiploswebsites em ummesmo ambiente, compartilhando todos os recursos de hardware e software disponíveis no servidor;
+- Virtual Private Server (VPS): neste caso, o deploy da aplicação ASP.NET é realizado em um servidor virtual dedicado para a aplicação. Nestes ambientes, de forma geral, a configuração fica por conta de quem contrata; 
+- Servidor dedicado: neste caso, temos um servidor físico. Este servidor terá todos os recursos disponíveis para executar o servidor de aplicação e “rodar” a aplicação ASP.NET MVC. A única diferença em relação às VPS’s é o fato de
+que um é virtualizado e o outro é físico;
+- Ambientes de Cloud: nos ambientes de computação em nuvem (em ampla expansão no mercado) existem diferentes modelos para host de aplicações ASP.NET MVC. Discutiremos alguns deles mais adiante neste capítulo.
+
+No primeiro grupo (IaaS) encontram-se agrupados todos os serviços e recursos associados diretamente ao modelo de infraestrutura, como por exemplo, servidores virtuais. É claro que, neste primeiro grupo, o esforço impresso por quem está adquirindo o serviço de nuvem é maior, uma vez toda a configuração do ambiente deve ser realizada por ele. De forma geral, buscam serviços nesta vertical empresas que desejam possuir um alto grau de personalização de ambiente.
+
+O segundo grupo (PaaS) incorpora serviços e recursos de nível mais alto. Aqui, o cliente contrata uma plataforma já pronta, pré-configurada, e simplesmente envia a aplicação para que execute neste ambiente. Todo esforço de manutenção do ambiente fica por conta do fornecedor da estrutura de computação em nuvem. Fica sob a responsabilidade do cliente apenas realizar o deploy da aplicação. De forma geral, quem busca estes ambientes são empresas de software, que não querem dispender esforços com a parte de infraestrutura.
+
+O terceiro grupo (SaaS) nada mais é do que o resultado final, após a publicação. São os softwares construídos especificamente para a plataforma de nuvem e que tem comportamento ótimo neste ambiente. Exemplos: Office 365, Google Docs, Educa-Net etc. “Cadê Meu Médico?” também será um software como serviço no fim deste capítulo.
+
+Emlinhas gerais,Windows AzureWeb Sites éumnovo ambiente disponibilizado dentro da plataforma Azure com características específicas para executar aplicações web de pequeno e médio portes. Ao criar um novo website neste modelo, assim como em uma hospedagem compartilhada tradicional, sua aplicação compartilhará recursos (disco, RAM, processamento etc.) com outras aplicações em um mesmo servidor — de alta capacidade
+
+- Git ou TFS deployment: comWAWS é possível utilizar Git ou TFS para efetuar a publicação de suas aplicações de forma direta. Com algumas poucos comandos e cliques, é possível habilitar o ambiente para deploy através destas ferramentas;
+- Escolha da publicação ativa: o portal doWAWS armazena cronologicamente às últimas publicações realizadas. Com alguns cliques você pode selecionar qual dentre elas é aquela que deve estar ativa;
+- Gerenciamento de configuração de aplicações: gerenciar os diversos valores e atributos de arquivos de configurações (web.config’s) é sempre uma dor de cabeça à parte. ComWAWS este problema foi reduzido drasticamente através de um mecanismo simples de parametrização;
+- Log’s do site: WAWS armazena log’s dos sites lá armazenados. Você pode monitorar a “saúde” de sua aplicação analisando-os. Este acesso pode ser realizado via client de FTP ou via ferramenta de linha de comando;
+- Bases de dados MySQL: WAWS suporta também bancos de dados MySQL. Você criar uma nova base de dados ou, ainda, utilizar uma base já existente para conectar sua aplicação. Para que MySQL pudesse funcionar com performance
+e segurança nomodelo de cloud, aMicrosoft estabeleceu uma parceria com uma empresa especializada, chamada ClearDB;
+- Escalabilidade: Windows AzureWeb Sites disponibiliza dois modelos possíveis para conseguir escala: compartilhado e reservado. No modo compartilhado é possível aumentar o número de processos referentes à aplicação web, enquanto no reservado é possível passar a aplicação para máquinas virtuais dedicadas e subir o número demáquinas que respondem para as aplicações lá hospedadas;
+- Segurança: WAWS trabalha em modo full trust. Isto significa dizer que todas as aplicações que “rodam” em ambiente compartilhado encontram-se completamente isoladas umas das outras. Este é um critério importante a ser avaliado
+no momento de planejar seu website;
+- Linguagens e frameworks: você já deve ter ouvido falar que WAWS suporta nativamente ASP.NET, ASP.NET MVC, PHP, Node.js. Talvez o que você não saiba é que suas aplicações ASP clássicas e 2.0 também são suportadas, logo, seus códigos legados são bem-vindos dentro doWindows AzureWeb Sites;
+- WebDeploy: outra característica importante agregada aoWAWS é a aceitação de publicação de aplicações via web deploy. Assim, se você utiliza as ferramentas daMicrosoft para gerenciamento de código (VS 2010, VS 2012, VS 2013 ou WebMatrix), poderá publicar diretamente através delas noWindows Azure;
+- NuGet: ao realizar o deploy de sua aplicação noWAWS, não émais necessário enviar os pacotes de forma agregada. OWindows Azure se encarrega de realizar tal tarefa em tempo de execução no momento da implantação; Domínios personalizados: uma dificuldade encontrada por boa parte dos desenvolvedores web que utilizam web roles noWindows Azure é a criação de domínios personalizados. ComWindows AzureWeb Sites, a especificação de domínios personalizados tornou-se extremamente simples, podendo utilizar o próprio portal de administração para este fim. Entretando, é importante observar que, para que esta feature funcione, o web site deve estar “rodando” em modo reservado;
+- Certificados: Windows Azure Web Sites oferecem suporte nativo para utilização de SSL para domínios externos e internos;
+
+• IIS8, Windows Server 2012 e .NET 4.5: para este primeiro preview, WAWS não implementa IIS8,Windows Server 2012 e .NET 4.5. Muito embora as novas versões ainda não sejam suportadas, estas deverão ser automaticamente implementadas à medida que se tornarem estáveis. Hoje o ambiente é: IIS 7.5, Windows Server 2008 R2 e .NET 4.5.
+
+Web roles são ambientes que permitem alto grau de personalização através de startup tasks. O objetivo das web roles é disponibilizar um ambiente para host de aplicações web mais robusto e totalmente personalizável, ao passo que oWAWS apresenta outro viés em termos de demanda: a simplicidade em detrimento da personalização.
+
+Ocódigo fote da aplicação que construímos no livro pode ser encontrado no GitHub (http://bit.ly/mvc-livrocodigofonte) , utilize sempre que necessário para referência nos estudos e contribua com o código fonte, faça um fork e aguardamos seu pull request.
+
+Além do código fonte um grupo de discussão (http://bit.ly/mvc-livrogrupodiscussao) foi criado para conversarmos sobre ASP.NET MVC e dúvidas referentes ao livro, aguardamos sua participação
 
 [Voltar ao Índice](#indice)
 
