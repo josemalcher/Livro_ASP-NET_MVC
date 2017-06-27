@@ -1390,14 +1390,84 @@ namespace CadeMeuMedicoAPP.Controllers
 
 A pergunta que pode ter se formado em sua cabeça neste instante é: a resposta volta para quem? Veja, no caso da aplicação “Cadê meu médico?”, utilizaremos uma chamada assíncrona com jQuery para disparar o processo de verificação da existência ou não do usuário, portanto, quem receberá a resposta final do controller será o objeto jQuery que originou o processo. A partir daí, será simples exibir os dados para o usuário final. Pois bem, já que possuímos a infraestrutura de backend pronta, precisamos montar a estrutura de frontend.
 
+### Filtros de ação
 
+Filtros de ação são, de forma direta, comportamentos específicos que podem ser atrelados a actions e controllers. Através de uma forma declarativa simples (entenda-se atributos), é possível incorporar robustez a natureza das aplicações.
 
+Umdos grandes benefícios proporcionados pelos filtros de ação é amelhoria significativa do design (arquitetura) da aplicação, uma vez que permite retirar de actions e controllers comportamentos que não são restritos a eles. Um exemplo claro desta situação encontra-se justamente no que faremos a seguir para a aplicação “Cadêmeu médico?”. Note, validar a permissão ou não de determinado usuário para acessar a página inicial da área administrativa (Home/Index) não é função da action “Index”, certo? Desta forma, a solução é encapsular tal comportamento em um filtro. Vamos à sua construção?
+
+Métodos de apoio para verificação do status do usuário:
+
+```csharp
+public static Usuario RecuperaUsuarioPorID(long IDUsuario)
+{
+try
+{
+using (EntidadesCadeMeuMedicoBD db =
+new EntidadesCadeMeuMedicoBD())
+{
+var Usuario =
+db.
+Usuarios.
+Where(u => u.IDUsuario == IDUsuario).
+SingleOrDefault();
+return Usuario;
+}
+}catch (Exception)
+{
+return null;
+}
+}
+
+public static Usuario VerificaSeOUsuarioEstaLogado()
+{
+var Usuario = HttpContext.
+Current.
+Request.
+Cookies["UserCookieAuthentication"];
+if (Usuario == null)
+{
+return null;
+}
+else
+{
+long IDUsuario = Convert.
+ToInt64(RepositorioCriptografia.
+Descriptografar(Usuario.Values["IDUsuario"]));
+var UsuarioRetornado = RecuperaUsuarioPorID(IDUsuario);
+return UsuarioRetornado;
+}
+}
+```
+
+Modificando a herança dos controladores:
+
+```csharp
+public class HomeController : BaseController
+{
+//
+// GET: /Home/
+public ActionResult Login()
+{
+ViewBag.Title = "Seja bem vindo(a)";
+return View();
+}
+public ActionResult Index()
+{
+return View();
+}
+}
+```
+
+Mais informações (https://www.asp.net/mvc/overview/security)[https://www.asp.net/mvc/overview/security]
 
 [Voltar ao Índice](#indice)
 
 ---
 
 ## <a name="parte8">Publicando sua aplicação</a>
+
+
 
 [Voltar ao Índice](#indice)
 

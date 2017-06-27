@@ -143,11 +143,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MedicosController.cs" />
     <Compile Include="Controllers\MensagensController.cs" />
     <Compile Include="Controllers\TesteLayoutController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
+    <Compile Include="Filtros\AutorizacaoDeAcesso.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -210,6 +212,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Uploads\Banners\" />
+    <Folder Include="Views\Base\" />
     <Folder Include="Views\Mensagens\" />
     <Folder Include="Views\Usuarios\" />
   </ItemGroup>

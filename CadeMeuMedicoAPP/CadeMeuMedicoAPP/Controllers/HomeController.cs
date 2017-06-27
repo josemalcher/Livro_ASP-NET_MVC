@@ -7,7 +7,7 @@ using CadeMeuMedicoAPP.Models;
 
 namespace CadeMeuMedicoAPP.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private EntidadesCadeMeuMedicoBDEntities db = new EntidadesCadeMeuMedicoBDEntities();
 
@@ -19,8 +19,8 @@ namespace CadeMeuMedicoAPP.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Especialidades = new SelectList(db.Especialidades, "IDEspecialidade", "Nome");
-            ViewBag.Cidades = new SelectList(db.Cidades, "IDCidade", "Nome");
+            //ViewBag.Especialidades = new SelectList(db.Especialidades, "IDEspecialidade", "Nome");
+            //ViewBag.Cidades = new SelectList(db.Cidades, "IDCidade", "Nome");
 
             return View();
         }
