@@ -1300,6 +1300,99 @@ Na sequência, para coroar o trabalho, bastaria criar um filtro que redirecionar
 
 ## <a name="parte7">Segurança: Criando sua área administrativa</a>
 
+### Criando a área administrativa
+
+Existem diferentes maneiras para se construir mecanismos de autenticação e persistir os dados do usuário autenticado utilizando ASP.NET MVC. Poderíamos utilizar o mecanismo de autenticação do próprio ASP.NET Membership (você pode encontrar um bom texto sobre o assunto no link: http://bit.ly/aspnetmembership), poderíamos criar nosso própriomodelo de autenticação utilizando o já super difundido conceito de sessions (você pode ler um bom texto sobre esta abordagem através do link: http://bit.ly/aspnetsessions) , poderíamos utilizar recursos de cache, tabela de um banco de dados relacional, enfim.
+
+Para a construção de nossa aplicação, utilizaremos um recurso amplamente utilizado web afora: os cookies. Se este conceito é novo para você, recomendamos a leitura do texto contido neste link: http://bit.ly/conceitodecookies.
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using CadeMeuMedicoAPP.Models;
+
+namespace CadeMeuMedicoAPP.Repositorios
+{
+    public class RepositorioUsuarios
+    {
+        public static bool AutenticarUsuario(string Login, string Senha)
+        {
+            var SenhaCriptografada = FormsAuthentication.HashPasswordForStoringInConfigFile(Senha, "sha1");
+            try
+            {
+                using (EntidadesCadeMeuMedicoBDEntities db = new EntidadesCadeMeuMedicoBDEntities())
+                {
+                    var QueryAutenticaUsuarios = db.Usuarios.Where(x => x.Login == Login && x.Senha == Senha).SingleOrDefault();
+
+                    if (QueryAutenticaUsuarios == null)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        RepositorioCookies.RegistraCookieAutenticacao(QueryAutenticaUsuarios.IDUsuario);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+    }
+}
+```
+
+Ao recebermos os dados de “Login” e “Senha”, verificamos através de uma expressão lambda—um bompost sobre este assunto pode ser encontrado através deste link: http://bit.ly/expressoeslambda—se existe na base de dados algum registro que atende de forma única aos dados informados pelo usuário. Se encontrar, gravamos o código do usuário em um cookie e o registramos no navegador e retornamos o valor true para indicar o sucesso da operação, caso contrário, retornamos o valor false para indicar a falha.
+
+Duas observações importantes aqui. A primeira diz respeito à linha “ var SenhaCriptografada = FormsAuthentication.HashPasswordForStoringInConfigFile(Senha,"sha1");”. Estamos fazendo desta forma por imaginar que a senha de acesso do usuário encontra-se criptografada no banco de dados
+
+A segunda observação está relacionada à utilização de repositórios para realizar a tarefa de gravação/registro do
+cookie (“ RepositorioCookies.RegistraCookieAutenticacao(QueryAutenticaUsuarios.IDUsuario);”).
+
+Após criarmos o método que irá até o banco de dados e fará a verificação da existência ou não do usuário, é chegado o momento de implementarmos o comportamento de autenticação no controller. Lembre-se, estes “caras” são os responsáveis por gerir todas as requisições que chegam ao framework.
+
+UsuariosController.cs
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using CadeMeuMedicoAPP.Repositorios;
+
+namespace CadeMeuMedicoAPP.Controllers
+{
+    public class UsuariosController : Controller
+    {
+        [HttpGet]
+        public JsonResult AutenticacaoDeUsuario(string Login, string Senha)
+        {
+            if (RepositorioUsuarios.AutenticarUsuario(Login, Senha))
+            {
+                return Json(new { OK = true, Mensagem = "Usuário autenticado. Redirecionando..." }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { OK = false, Mensagem = "Usuário não encontrando. Tente novamente." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+    }
+}
+```
+- Na primeira linha decoramos a action “AutenticacaoDeUsuario” com o atributo [HttpGet], indicando que o método apenas devolverá dados para o chamador. Se não decorássemos a action com este atributo (ou outro qualquer), o ASP.NET MVC automaticamente imprimirá o comportamento de [HttpGet];
+- Ao receber os dados de entrada, utilizamos o método “AutenticarUsuario” do “RepositorioUsuarios”, criado na listagem 1;
+- Ao receber a resposta da verificação (veja o if ), retornamos em formato JSON o status do processo: sucesso (repare na linha return Json(new { OK = true, Mensagem = "Usuário autenticado. Redirecionando..."},  sonRequestBehavior.AllowGet);) ou falha (note a linha return Json(new { OK = false, Mensagem = "Usuário não encontrando. Tente novamente."}, JsonRequestBehavior.AllowGet);). Bacana, não?! Simples e direto.
+
+A pergunta que pode ter se formado em sua cabeça neste instante é: a resposta volta para quem? Veja, no caso da aplicação “Cadê meu médico?”, utilizaremos uma chamada assíncrona com jQuery para disparar o processo de verificação da existência ou não do usuário, portanto, quem receberá a resposta final do controller será o objeto jQuery que originou o processo. A partir daí, será simples exibir os dados para o usuário final. Pois bem, já que possuímos a infraestrutura de backend pronta, precisamos montar a estrutura de frontend.
+
+
+
+
 [Voltar ao Índice](#indice)
 
 ---
